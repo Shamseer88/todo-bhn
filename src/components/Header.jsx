@@ -9,10 +9,16 @@ export default function Header() {
   );
 }
 
+// STYLED COMPONENTS
 const StyledHeader = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100px;
   background-color: #f1ece6;
+  img {
+    @media (max-width: 768px) {
+      height: 50px;
+    }
+  }
 `;
