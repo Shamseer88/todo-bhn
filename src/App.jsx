@@ -6,7 +6,7 @@ import TodoList from "./components/TodoList";
 
 export default function App() {
   const [personalTodos, setPersonalTodos] = useState([]);
-  const [professionalTodo, setProfessionalTodos] = useState([]);
+  const [professionalTodos, setProfessionalTodos] = useState([]);
   const [activeTab, setActiveTab] = useState("Personal");
 
   const toggleTab = (tab) => {
@@ -19,26 +19,45 @@ export default function App() {
         "https://jsonplaceholder.typicode.com/todos?_limit=5"
       );
       const data = await response.json();
-      localStorage.setItem("personalTodos", JSON.stringify(data));
-      setPersonalTodos(data);
+      if (activeTab === "Personal") {
+        localStorage.setItem("personalTodos", JSON.stringify(data));
+        setPersonalTodos(data);
+      } else {
+        localStorage.setItem("professionalTodos", JSON.stringify(data));
+        setProfessionalTodos(data);
+      }
     } catch (error) {
       console.log("Error fetching Todos from API", error);
     }
   };
 
   const addTodo = (newTodo) => {
-    let updatedTodos = [...personalTodos, newTodo];
-    setPersonalTodos(updatedTodos);
-    localStorage.setItem("personalTodos", JSON.stringify(updatedTodos));
+    if (activeTab === "Personal") {
+      let updatedTodos = [...personalTodos, newTodo];
+      setPersonalTodos(updatedTodos);
+      localStorage.setItem("personalTodos", JSON.stringify(updatedTodos));
+    } else {
+      let updatedProfessionalTodos = [...professionalTodos, newTodo];
+      setProfessionalTodos(updatedProfessionalTodos);
+      localStorage.setItem("personalTodos", JSON.stringify(updatedTodos));
+    }
   };
 
   useEffect(() => {
     // Get todos from local storage on component mount
     const storedTodos = JSON.parse(localStorage.getItem("personalTodos")) || [];
+    const storedProfessionalTodos =
+      JSON.parse(localStorage.getItem("professionalTodos")) || [];
 
     // Fetch from API only if local storage is empty
     if (storedTodos.length > 0) {
       setPersonalTodos(storedTodos);
+    } else {
+      fetchTodosFromAPI();
+    }
+
+    if (storedProfessionalTodos.length > 0) {
+      setPersonalTodos(storedProfessionalTodos);
     } else {
       fetchTodosFromAPI();
     }
@@ -49,11 +68,19 @@ export default function App() {
       <Header />
       <Tabs toggleTab={toggleTab} activeTab={activeTab} />
       <TodoInput addTodo={addTodo} />
-      <TodoList
-        personalTodos={personalTodos}
-        setPersonalTodos={setPersonalTodos}
-        showPersonal={activeTab === "Personal"}
-      />
+      {activeTab === "Personal" ? (
+        <TodoList
+          personalTodos={personalTodos}
+          setPersonalTodos={setPersonalTodos}
+          showPersonal={activeTab === "Personal"}
+        />
+      ) : (
+        <TodoList
+          personalTodos={professionalTodos}
+          setPersonalTodos={setProfessionalTodos}
+          showPersonal={activeTab === "Professional"}
+        />
+      )}
     </div>
   );
 }
