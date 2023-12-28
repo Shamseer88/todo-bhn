@@ -150,5 +150,13 @@ const ClearCompleted = styled.div`
   p {
     font-size: 24px;
     color: #d98326;
+    @media (max-width: 768px) {
+      font-size: 0.75rem;
+    }
+  }
+  img {
+    @media (max-width: 768px) {
+      height: 15px;
+    }
   }
 `;
