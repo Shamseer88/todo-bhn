@@ -41,3 +41,6 @@ To deploy this project run
 - Mark as completed
 - Toggle professional / personal todos
 
+## Demo
+
+https://resilient-boba-e49e2f.netlify.app/
