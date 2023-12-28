@@ -1,30 +1,44 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-export default function TodoList({ personalTodos }) {
-  const [completedTodos, setCompletedTodos] = useState(
-    JSON.parse(localStorage.getItem("completedTodos")) || []
-  );
+export default function TodoList({ personalTodos, setPersonalTodos }) {
+  const [completedTodos, setCompletedTodos] = useState([]);
+
+  useEffect(() => {
+    // Initialize completedTodos from local storage on component mount
+    const storedCompletedTodos =
+      JSON.parse(localStorage.getItem("completedTodos")) || [];
+    setCompletedTodos(storedCompletedTodos);
+  }, []);
 
   const markAsCompleted = (todoId) => {
     // Find the todo with the given ID
     const todo = personalTodos.find((t) => t.id === todoId);
     if (!todo) return;
 
-    // Remove the todo from the personalTodos
-    const updatedTodos = personalTodos.filter((t) => t.id !== todoId);
+    // Update the todo to mark it as completed
     todo.completed = true;
 
-    // Update local storage for personalTodos
+    // Update personalTodos
+    const updatedTodos = personalTodos.map((t) => (t.id === todoId ? todo : t));
+    setPersonalTodos(updatedTodos);
     localStorage.setItem("personalTodos", JSON.stringify(updatedTodos));
 
-    // Add the todo to completed todos
-    setCompletedTodos([...completedTodos, todo]);
-
+    // Update completedTodos
+    setCompletedTodos((prevCompletedTodos) => [...prevCompletedTodos, todo]);
     localStorage.setItem(
       "completedTodos",
       JSON.stringify([...completedTodos, todo])
     );
+  };
+
+  const deleteAllCompleted = () => {
+    const remainingTodos = personalTodos.filter((todo) => !todo.completed);
+    setPersonalTodos(remainingTodos);
+    localStorage.setItem("personalTodos", JSON.stringify(remainingTodos));
+
+    setCompletedTodos([]);
+    localStorage.setItem("completedTodos", JSON.stringify([]));
   };
 
   return (
@@ -48,6 +62,11 @@ export default function TodoList({ personalTodos }) {
           </TodoItemRight>
         </TodoItem>
       ))}
+
+      <ClearCompleted onClick={deleteAllCompleted}>
+        <img src="/delete-all.png" alt="clear all button image" />
+        <p>Clear Completed</p>
+      </ClearCompleted>
     </Container>
   );
 }
@@ -72,6 +91,7 @@ const TodoItem = styled.div`
   border-bottom: 1px solid #76b7cd;
   border-width: 75%;
 `;
+
 const TodoItemLeft = styled.div`
   display: flex;
   align-items: center;
@@ -93,6 +113,7 @@ const TodoItemLeft = styled.div`
     }
   }
 `;
+
 const TodoItemRight = styled.div`
   display: flex;
   align-items: center;
@@ -101,5 +122,18 @@ const TodoItemRight = styled.div`
     @media (max-width: 768px) {
       height: 20px;
     }
+  }
+`;
+
+const ClearCompleted = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 2rem;
+  justify-content: flex-end;
+  cursor: pointer;
+  p {
+    font-size: 24px;
+    color: #d98326;
   }
 `;

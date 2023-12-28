@@ -10,7 +10,7 @@ export default function App() {
   const fetchTodosFromAPI = async () => {
     try {
       const response = await fetch(
-        "https://jsonplaceholder.typicode.com/todos?_limit=10"
+        "https://jsonplaceholder.typicode.com/todos?_limit=5"
       );
       const data = await response.json();
       localStorage.setItem("personalTodos", JSON.stringify(data));
@@ -43,7 +43,10 @@ export default function App() {
       <Header />
       <Tabs />
       <TodoInput addTodo={addTodo} />
-      <TodoList personalTodos={personalTodos} />
+      <TodoList
+        personalTodos={personalTodos}
+        setPersonalTodos={setPersonalTodos}
+      />
     </div>
   );
 }
