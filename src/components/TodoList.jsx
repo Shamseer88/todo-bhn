@@ -41,6 +41,17 @@ export default function TodoList({ personalTodos, setPersonalTodos }) {
     localStorage.setItem("completedTodos", JSON.stringify([]));
   };
 
+  const deleteTodo = (todoId) => {
+    // Filter out the todo with the given ID
+    const updatedTodos = personalTodos.filter((todo) => todo.id !== todoId);
+
+    // Update personalTodos state
+    setPersonalTodos(updatedTodos);
+
+    // Update local storage
+    localStorage.setItem("personalTodos", JSON.stringify(updatedTodos));
+  };
+
   return (
     <Container>
       {personalTodos.map((todo) => (
@@ -58,7 +69,11 @@ export default function TodoList({ personalTodos, setPersonalTodos }) {
             <p className={todo.completed ? "completed" : ""}>{todo.title}</p>
           </TodoItemLeft>
           <TodoItemRight>
-            <img src="/delete-outline.png" alt="delete button" />
+            <img
+              src="/delete-outline.png"
+              alt="delete button"
+              onClick={() => deleteTodo(todo.id)}
+            />
           </TodoItemRight>
         </TodoItem>
       ))}
