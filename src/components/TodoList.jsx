@@ -1,14 +1,47 @@
-import React from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
 export default function TodoList({ personalTodos }) {
+  const [completedTodos, setCompletedTodos] = useState(
+    JSON.parse(localStorage.getItem("completedTodos")) || []
+  );
+
+  const markAsCompleted = (todoId) => {
+    // Find the todo with the given ID
+    const todo = personalTodos.find((t) => t.id === todoId);
+    if (!todo) return;
+
+    // Remove the todo from the personalTodos
+    const updatedTodos = personalTodos.filter((t) => t.id !== todoId);
+    todo.completed = true;
+
+    // Update local storage for personalTodos
+    localStorage.setItem("personalTodos", JSON.stringify(updatedTodos));
+
+    // Add the todo to completed todos
+    setCompletedTodos([...completedTodos, todo]);
+
+    localStorage.setItem(
+      "completedTodos",
+      JSON.stringify([...completedTodos, todo])
+    );
+  };
+
   return (
     <Container>
       {personalTodos.map((todo) => (
         <TodoItem key={todo.id}>
           <TodoItemLeft>
-            <img src="/circle.png" alt="circle" />
-            <p>{todo.title}</p>
+            {todo.completed ? (
+              <img src="/check-circle.png" alt="checked circle" />
+            ) : (
+              <img
+                src="/circle.png"
+                alt="circle"
+                onClick={() => markAsCompleted(todo.id)}
+              />
+            )}
+            <p className={todo.completed ? "completed" : ""}>{todo.title}</p>
           </TodoItemLeft>
           <TodoItemRight>
             <img src="/delete-outline.png" alt="delete button" />
@@ -45,6 +78,10 @@ const TodoItemLeft = styled.div`
   p {
     color: #323232;
     font-size: 2rem;
+    &.completed {
+      text-decoration: line-through;
+      color: #c2c2c2;
+    }
     @media (max-width: 768px) {
       font-size: 1rem;
     }

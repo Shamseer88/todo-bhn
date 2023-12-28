@@ -6,28 +6,43 @@ import TodoList from "./components/TodoList";
 
 export default function App() {
   const [personalTodos, setPersonalTodos] = useState([]);
+
   const fetchTodosFromAPI = async () => {
     try {
       const response = await fetch(
         "https://jsonplaceholder.typicode.com/todos?_limit=10"
       );
       const data = await response.json();
+      localStorage.setItem("personalTodos", JSON.stringify(data));
       setPersonalTodos(data);
-      localStorage.setItem("personalTodos", JSON.stringify(personalTodos));
     } catch (error) {
       console.log("Error fetching Todos from API", error);
     }
   };
 
+  const addTodo = (newTodo) => {
+    let updatedTodos = [...personalTodos, newTodo];
+    setPersonalTodos(updatedTodos);
+    localStorage.setItem("personalTodos", JSON.stringify(updatedTodos));
+  };
+
   useEffect(() => {
-    fetchTodosFromAPI();
+    // Get todos from local storage on component mount
+    const storedTodos = JSON.parse(localStorage.getItem("personalTodos")) || [];
+
+    // Fetch from API only if local storage is empty
+    if (storedTodos.length > 0) {
+      setPersonalTodos(storedTodos);
+    } else {
+      fetchTodosFromAPI();
+    }
   }, []);
 
   return (
     <div>
       <Header />
       <Tabs />
-      <TodoInput />
+      <TodoInput addTodo={addTodo} />
       <TodoList personalTodos={personalTodos} />
     </div>
   );

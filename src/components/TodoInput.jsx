@@ -1,11 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
-export default function TodoInput() {
+export default function TodoInput({ addTodo }) {
+  const [todoText, setTodoText] = useState("");
+
+  const handleAddToDo = () => {
+    // Don't add any empty todo
+    if (todoText.trim() === "") return;
+    addTodo({
+      userId: 1,
+      id: Date.now(),
+      title: todoText,
+      completed: false,
+    });
+    // Clear the input field after adding
+    setTodoText("");
+  };
+
   return (
     <InputDiv>
-      <input type="text" placeholder="What do you need to do?" />
-      <button>ADD</button>
+      <input
+        type="text"
+        placeholder="What do you need to do?"
+        value={todoText}
+        onChange={(e) => setTodoText(e.target.value)}
+      />
+      <button onClick={handleAddToDo}>ADD</button>
     </InputDiv>
   );
 }
