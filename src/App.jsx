@@ -6,6 +6,7 @@ import TodoList from "./components/TodoList";
 
 export default function App() {
   const [personalTodos, setPersonalTodos] = useState([]);
+  const [professionalTodo, setProfessionalTodos] = useState([]);
   const [activeTab, setActiveTab] = useState("Personal");
 
   const toggleTab = (tab) => {
