@@ -1,36 +1,20 @@
 import React from "react";
 import styled from "styled-components";
 
-export default function TodoList() {
+export default function TodoList({ personalTodos }) {
   return (
     <Container>
-      <TodoItem>
-        <TodoItemLeft>
-          <img src="/circle.png" alt="circle" />
-          <p>Personal work no1</p>
-        </TodoItemLeft>
-        <TodoItemRight>
-          <img src="/delete-outline.png" alt="delete button" />
-        </TodoItemRight>
-      </TodoItem>
-      <TodoItem>
-        <TodoItemLeft>
-          <img src="/circle.png" alt="circle" />
-          <p>Personal work no1</p>
-        </TodoItemLeft>
-        <TodoItemRight>
-          <img src="/delete-outline.png" alt="delete button" />
-        </TodoItemRight>
-      </TodoItem>
-      <TodoItem>
-        <TodoItemLeft>
-          <img src="/circle.png" alt="circle" />
-          <p>Personal work no1</p>
-        </TodoItemLeft>
-        <TodoItemRight>
-          <img src="/delete-outline.png" alt="delete button" />
-        </TodoItemRight>
-      </TodoItem>
+      {personalTodos.map((todo) => (
+        <TodoItem key={todo.id}>
+          <TodoItemLeft>
+            <img src="/circle.png" alt="circle" />
+            <p>{todo.title}</p>
+          </TodoItemLeft>
+          <TodoItemRight>
+            <img src="/delete-outline.png" alt="delete button" />
+          </TodoItemRight>
+        </TodoItem>
+      ))}
     </Container>
   );
 }

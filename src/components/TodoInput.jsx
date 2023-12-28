@@ -25,7 +25,7 @@ const InputDiv = styled.div`
     outline: none;
     background: #f1ece6;
     width: 100%;
-    padding: 1rem;
+    padding: 1rem 2.5rem;
     font-size: 2rem;
     border-radius: 50px;
     @media (max-width: 768px) {
