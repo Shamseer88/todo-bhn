@@ -6,6 +6,11 @@ import TodoList from "./components/TodoList";
 
 export default function App() {
   const [personalTodos, setPersonalTodos] = useState([]);
+  const [activeTab, setActiveTab] = useState("Personal");
+
+  const toggleTab = (tab) => {
+    setActiveTab(tab);
+  };
 
   const fetchTodosFromAPI = async () => {
     try {
@@ -41,11 +46,12 @@ export default function App() {
   return (
     <div>
       <Header />
-      <Tabs />
+      <Tabs toggleTab={toggleTab} activeTab={activeTab} />
       <TodoInput addTodo={addTodo} />
       <TodoList
         personalTodos={personalTodos}
         setPersonalTodos={setPersonalTodos}
+        showPersonal={activeTab === "Personal"}
       />
     </div>
   );

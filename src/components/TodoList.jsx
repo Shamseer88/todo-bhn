@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-export default function TodoList({ personalTodos, setPersonalTodos }) {
+export default function TodoList({
+  personalTodos,
+  setPersonalTodos,
+  showPersonal,
+}) {
   const [completedTodos, setCompletedTodos] = useState([]);
 
   useEffect(() => {
@@ -54,29 +58,30 @@ export default function TodoList({ personalTodos, setPersonalTodos }) {
 
   return (
     <Container>
-      {personalTodos.map((todo) => (
-        <TodoItem key={todo.id}>
-          <TodoItemLeft>
-            {todo.completed ? (
-              <img src="/check-circle.png" alt="checked circle" />
-            ) : (
+      {showPersonal &&
+        personalTodos.map((todo) => (
+          <TodoItem key={todo.id}>
+            <TodoItemLeft>
+              {todo.completed ? (
+                <img src="/check-circle.png" alt="checked circle" />
+              ) : (
+                <img
+                  src="/circle.png"
+                  alt="circle"
+                  onClick={() => markAsCompleted(todo.id)}
+                />
+              )}
+              <p className={todo.completed ? "completed" : ""}>{todo.title}</p>
+            </TodoItemLeft>
+            <TodoItemRight>
               <img
-                src="/circle.png"
-                alt="circle"
-                onClick={() => markAsCompleted(todo.id)}
+                src="/delete-outline.png"
+                alt="delete button"
+                onClick={() => deleteTodo(todo.id)}
               />
-            )}
-            <p className={todo.completed ? "completed" : ""}>{todo.title}</p>
-          </TodoItemLeft>
-          <TodoItemRight>
-            <img
-              src="/delete-outline.png"
-              alt="delete button"
-              onClick={() => deleteTodo(todo.id)}
-            />
-          </TodoItemRight>
-        </TodoItem>
-      ))}
+            </TodoItemRight>
+          </TodoItem>
+        ))}
 
       <ClearCompleted onClick={deleteAllCompleted}>
         <img src="/delete-all.png" alt="clear all button image" />

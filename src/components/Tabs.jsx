@@ -1,11 +1,21 @@
 import React from "react";
 import styled from "styled-components";
 
-export default function Tabs() {
+export default function Tabs({ toggleTab, activeTab }) {
   return (
     <StyledTabs>
-      <Button className="active">Personal</Button>
-      <Button>Professional</Button>
+      <Button
+        className={activeTab === "Personal" ? "active" : ""}
+        onClick={() => toggleTab("Personal")}
+      >
+        Personal
+      </Button>
+      <Button
+        className={activeTab === "Professional" ? "active" : ""}
+        onClick={() => toggleTab("Professional")}
+      >
+        Professional
+      </Button>
     </StyledTabs>
   );
 }
